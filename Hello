@@ -67,3 +67,39 @@ Implement the logic to query the database based on the parameters.
 Exception Handling:
 Define a custom exception class (e.g., RequestAlreadyExistsException) to handle the case when an existing request is found.
 Customize the exception message as needed.
+
+
+---------------------------------------------------cgpt-----------------------------------------------------
+@Service
+public class RequestSubmissionService {
+
+    @Autowired
+    private RequestSubmissionRepository requestSubmissionRepository;
+
+    @Autowired
+    private ReportRepository reportRepository;
+
+    @Transactional
+    public Long create(RequestSubmission requestSubmission, boolean share) {
+        // Check if an existing request with the same number of parameters exists
+        boolean existingRequestExists = requestSubmissionRepository.existsByNumberOfParameters(requestSubmission.getRequestSubmissionParms().size());
+
+        if (existingRequestExists) {
+            throw new RuntimeException("An existing request with the same number of parameters already exists.");
+        }
+
+        // Your existing code continues here...
+        // Ensure to place your existing logic below the check for existing requests
+
+        // Example:
+        // If the check passes, continue with your existing logic
+        // requestSubmission.getReport().setReportid(getReportDetails(requestSubmission));
+
+        // And so on...
+
+        // Save the request submission to the database
+        RequestSubmission savedSubmission = requestSubmissionRepository.save(requestSubmission);
+
+        return savedSubmission.getId();
+    }
+}
