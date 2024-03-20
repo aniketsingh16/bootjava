@@ -1,0 +1,69 @@
+Report Information:
+reportid: 261
+guid: ADAPTIV_TRADE_GOLD1
+userid: x01279711
+status: PENDING
+dataCount: 0
+Request Submission Parameters:
+parameters: p_SAP_L3 => Group Head Office - Legacy Assets
+businessDate: 29 Feb 2024
+description: N/A
+extractType: TRADE
+lastUpdatedBy: x01279711
+sourceSystem: ADAPTIV
+reportType: GOLD1
+createdBy: x01279711
+DC_FILE_COLUMN_SEPARATOR: |
+ROW_FIELDS: SAP_LEVEL_3_NAME
+VALUE_FIELDS: APPLICABLE_GOLD1; APPLICABLE_GOLD2
+NUMBER_FIELDS: APPLICABLE_GOLD1; APPLICABLE_GOLD2; GOLD2_GROSS_LOSS_USD; REALISED_LOSS_TRADE_LEVEL_USD; REALISED_PL_USD; UNREALISED_PL_USD
+COLUMN_FIELDS: SYSTEM_CODE
+Observations:
+The submission appears to be related to a financial report (GOLD1) with specific parameters.
+The ROW_FIELDS, VALUE_FIELDS, and NUMBER_FIELDS provide insight into the data columns expected in the report.
+The DC_FILE_COLUMN_SEPARATOR indicates that the report data is separated by the pipe character (|).
+Actions Taken:
+The submission status is set to PENDING.
+Various fields related to timestamps, user IDs, and report details are updated.
+
+----------------------------------------------------------------------------------
+
+Define Your Entity and Repository:
+Create an entity (e.g., RequestSubmission) that represents the request data.
+Define a repository (e.g., RequestSubmissionRepository) to interact with the database.
+Service Layer:
+In your service layer, create a method that checks if an existing request with the same parameters exists.
+You can use the repository to query the database based on the parameters.
+Business Logic:
+When a new request comes in, call the method to check for existing requests.
+If an existing request is found, throw an exception (e.g., RequestAlreadyExistsException).
+Otherwise, proceed with accepting the request.
+Example Implementation:
+Java
+
+@Service
+public class RequestService {
+
+    private final RequestSubmissionRepository requestRepository;
+
+    public RequestService(RequestSubmissionRepository requestRepository) {
+        this.requestRepository = requestRepository;
+    }
+
+    public void processRequest(RequestSubmission requestSubmission) {
+        // Check if an existing request with the same parameters exists
+        if (requestRepository.existsByParameters(requestSubmission.getParameters())) {
+            throw new RequestAlreadyExistsException("Request with the same parameters already exists.");
+        }
+
+        // Save the new request
+        requestRepository.save(requestSubmission);
+    }
+}
+AI-generated code. Review and use carefully. More info on FAQ.
+Customize the existsByParameters Method:
+In your repository, create a custom method that checks if a request with the same parameters exists.
+Implement the logic to query the database based on the parameters.
+Exception Handling:
+Define a custom exception class (e.g., RequestAlreadyExistsException) to handle the case when an existing request is found.
+Customize the exception message as needed.
