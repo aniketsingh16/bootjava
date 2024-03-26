@@ -38,3 +38,13 @@ public class SubmissionRepositoryImpl implements SubmissionRepositoryCustom {
         return count > 0;
     }
 }
+
+
+
+
+
+return queryFactory.selectFrom(submission)
+                .where(submission.report.reportid.eq(reportId)
+                        .and(submission.userid.eq(userId))
+                        .and(submission.status.eq(status)))
+                .fetchCount() > 0;
