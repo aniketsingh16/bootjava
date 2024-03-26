@@ -16,3 +16,25 @@ Spring Data JPA will generate the appropriate SQL query based on the method name
 Make sure to replace Submission with your actual entity class name, and Long with the appropriate data types for reportId and userId in your application.
 
 If you're using a custom implementation of the repository or a different approach to data access, you'll need to adjust the method accordingly. Let me know if you need further assistance!
+
+
+
+
+public class SubmissionRepositoryImpl implements SubmissionRepositoryCustom {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Override
+    public boolean existsByReportIdAndUserIdAndStatus(Long reportId, Long userId, String status) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT COUNT(s) FROM Submission s WHERE s.reportId = :reportId AND s.userId = :userId AND s.status = :status",
+                Long.class);
+        query.setParameter("reportId", reportId);
+        query.setParameter("userId", userId);
+        query.setParameter("status", status);
+
+        Long count = query.getSingleResult();
+        return count > 0;
+    }
+}
