@@ -1,0 +1,18 @@
+        if (submissionRepository.existsByReportIdAndUserIdAndStatus(requestSubmission.getReport().getReportid(), requestSubmission.getUserid(), ParamUtils.SUCCESS)) {
+            throw new Exception("A submission with the same reportId, userId, and status already exists.");
+        }
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SubmissionRepository extends JpaRepository<Submission, Long> {
+
+    boolean existsByReportIdAndUserIdAndStatus(Long reportId, Long userId, String status);
+}
+In this example:
+
+SubmissionRepository is assumed to extend the JpaRepository interface provided by Spring Data JPA.
+The method existsByReportIdAndUserIdAndStatus follows Spring Data JPA's method naming convention to automatically generate a query to check if a submission with the given reportId, userId, and status exists in the database.
+Spring Data JPA will generate the appropriate SQL query based on the method name.
+Make sure to replace Submission with your actual entity class name, and Long with the appropriate data types for reportId and userId in your application.
+
+If you're using a custom implementation of the repository or a different approach to data access, you'll need to adjust the method accordingly. Let me know if you need further assistance!
