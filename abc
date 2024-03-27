@@ -1,0 +1,66 @@
+REPO
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface YourRepository extends JpaRepository<YourEntity, Long> {
+    boolean existsByUserIdAndReportIdAndStatus(Long userId, Long reportId, String status);
+}
+
+SWERVICE
+@Service
+public class YourService {
+
+    @Autowired
+    private YourRepository yourRepository;
+
+    public void createRecord(RequestDTO requestDTO) {
+        // Extract parameters from the incoming request
+        Long userId = requestDTO.getUserId();
+        Long reportId = requestDTO.getReportId();
+        String status = requestDTO.getStatus();
+
+        // Query the database to check for existing records
+        boolean existingRecordFound = yourRepository.existsByUserIdAndReportIdAndStatus(userId, reportId, status);
+
+        // If a match is found, throw an exception
+        if (existingRecordFound) {
+            throw new DuplicateRecordException("A record with the same UserId, ReportId, and Status already exists.");
+        }
+
+        // Proceed with creating the new record
+        YourEntity newRecord = new YourEntity();
+        newRecord.setUserId(userId);
+        newRecord.setReportId(reportId);
+        newRecord.setStatus(status);
+
+        yourRepository.save(newRecord);
+    }
+}
+
+REPO IMPL
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+public class YourRepositoryImpl implements YourRepositoryCustom {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    private final JPAQueryFactory queryFactory;
+
+    public YourRepositoryImpl() {
+        this.queryFactory = new JPAQueryFactory(entityManager);
+    }
+
+    @Override
+    public boolean existsByUserIdAndReportIdAndStatus(Long userId, Long reportId, String status) {
+        QYourEntity yourEntity = QYourEntity.yourEntity;
+        return queryFactory.selectOne()
+                .from(yourEntity)
+                .where(yourEntity.userId.eq(userId)
+                        .and(yourEntity.reportId.eq(reportId))
+                        .and(yourEntity.status.eq(status)))
+                .fetchFirst() != null;
+    }
+}
