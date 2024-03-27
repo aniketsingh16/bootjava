@@ -1,0 +1,16 @@
+3/27, 7:52 PM] Anadi: Suno, we can do like this-
+*Ise starting me add kar dena to check this-*
+
+if (requestExistsInDatabase(requestSubmission)) {
+        throw new DataIntegrityViolationException("Request already exists in the database");
+    }
+[3/27, 7:55 PM] Anadi: *Ye definition hai uski-*
+
+private boolean requestExistsInDatabase(RequestSubmission requestSubmission) {
+if (requestSubmission.getGuid() != null && getValueFromParams(requestSubmission, ParamUtils.FILE_NAME_OVERRIDE) == null) {
+requestSubmission.getRequestSubmissionParms().add(
+new RequestSubmissionParm(new RequestSubmissionParmId(submissionid null, ParamUtils.FILE_NAME_OVERRIDE), requestSubmission: null, requestSubmission .getSuid()));
+    return requestSubmissionRepository.existsBySomeCriteria(requestSubmission); }
+    }
+[3/27, 7:55 PM] Anadi: Maine JPA consider kiya hai DB ko
+[3/27, 7:55 PM] Anadi: ise service class me daalna hai
