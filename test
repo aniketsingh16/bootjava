@@ -1,0 +1,38 @@
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+public class RequestSubmissionServiceTest {
+
+    @Mock
+    private RequestSubmissionQueryDSLRepository queryDSLRepository;
+
+    @InjectMocks
+    private RequestSubmissionService requestSubmissionService;
+
+    @Test
+    public void testFindRequestSubmission() {
+        // Mock data
+        Long reportId = 1L;
+        String userId = "user123";
+        String status = "pending";
+        RequestSubmission mockSubmission = new RequestSubmission();
+        // Set up expectations
+        when(queryDSLRepository.findByReportIdAndUserIdAndStatus(reportId, userId, status)).thenReturn(mockSubmission);
+
+        // Call the service method
+        RequestSubmission result = requestSubmissionService.findRequestSubmission(reportId, userId, status);
+
+        // Verify the result
+        assertNotNull(result);
+        // You can add more assertions as per your requirements
+        // For example, you can verify properties of the returned object.
+    }
+}
