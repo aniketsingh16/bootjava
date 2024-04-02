@@ -48,3 +48,30 @@ return queryFactory.selectFrom(submission)
                         .and(submission.userid.eq(userId))
                         .and(submission.status.eq(status)))
                 .fetchCount() > 0;
+
+
+
+--STATUS
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class RequestSubmissionQueryDSLRepository {
+
+    @Autowired
+    private JPAQueryFactory queryFactory;
+
+    public RequestSubmission findByReportIdAndUserIdAndStatus(Long reportId, String userId, String status) {
+        QRequestSubmission requestSubmission = QRequestSubmission.requestSubmission;
+
+        BooleanExpression statusExpression = requestSubmission.status.in("QUEUED", "RUNNING", "PENDING");
+
+        return queryFactory.selectFrom(requestSubmission)
+                .where(requestSubmission.reportId.eq(reportId)
+                        .and(requestSubmission.userId.eq(userId))
+                        .and(statusExpression))
+                .fetchOne();
+    }
+}
