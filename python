@@ -1,0 +1,43 @@
+import pandas as pd
+import numpy as np
+
+# Define the DataFrame
+data = {
+    'ID': np.random.randint(0, 100, 10),
+    'Value': np.random.randn(10),
+    'Category': np.random.choice(['A', 'B', 'C'], 10),
+    'Probability': np.random.rand(10),
+    'Score': np.random.uniform(1, 10, 10),
+    'Count': np.random.randint(100, 1000, 10)
+}
+
+df = pd.DataFrame(data)
+type(df)
+
+df['Probability'] = df['Probability'].round(0).astype(int)
+df['Score'] = df['Score'].round(0).astype(int)
+df
+
+df_style = df.style.set_properties(**{'Category': 'text-align: left', 'Probability': 'text-align: left'})
+
+styled_df = df.style.set_properties(subset=['Category', 'Probability'], **{'text-align': 'left'})
+
+# Display the styled DataFrame
+styled_df
+
+#bg-color
+styles = {
+    'Score': [{'selector': '', 'props': [('background-color', 'lightgrey')]}]
+}
+
+# Apply styles to the DataFrame
+styled_df = df.style.set_table_styles(styles)
+
+def highlight_category_c(row):
+    if row['Category'] == 'C':
+        return ['font-weight: bold'] * len(row)
+    else:
+        return [''] * len(row)
+
+# Apply the styling function to the DataFrame
+styled_df = styled_df.apply(highlight_category_c, axis=1)
