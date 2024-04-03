@@ -1,0 +1,49 @@
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Collections;
+
+@ExtendWith(MockitoExtension.class)
+public class RequestSubmissionQueryDSLRepositoryTest {
+
+    @Mock
+    private JPAQueryFactory queryFactory;
+
+    @InjectMocks
+    private RequestSubmissionQueryDSLRepository requestSubmissionRepository;
+
+    @Test
+    public void testFindByReportIdAndUserIdAndStatus() {
+        // Mock data
+        Long reportId = 1L;
+        String userId = "user123";
+        String status = "PENDING";
+        QRequestSubmission requestSubmission = QRequestSubmission.requestSubmission;
+        RequestSubmission mockSubmission = new RequestSubmission();
+        // Set up expectations
+        when(queryFactory.selectFrom(requestSubmission)).thenReturn(mock(JPAQuery.class));
+        when(queryFactory.selectFrom(requestSubmission).where(any(BooleanExpression.class))).thenReturn(queryFactory.selectFrom(requestSubmission));
+        when(queryFactory.selectFrom(requestSubmission).where(requestSubmission.reportId.eq(reportId)
+                .and(requestSubmission.userId.eq(userId))
+                .and(requestSubmission.status.in("QUEUED", "RUNNING", "PENDING")))).thenReturn(queryFactory.selectFrom(requestSubmission));
+        when(queryFactory.selectFrom(requestSubmission).where(requestSubmission.reportId.eq(reportId)
+                .and(requestSubmission.userId.eq(userId))
+                .and(requestSubmission.status.in("QUEUED", "RUNNING", "PENDING"))).fetchOne()).thenReturn(mockSubmission);
+
+        // Call the repository method
+        RequestSubmission result = requestSubmissionRepository.findByReportIdAndUserIdAndStatus(reportId, userId, status);
+
+        // Verify the result
+        assertNotNull(result);
+        // You can add more assertions as per your requirements
+    }
+}
