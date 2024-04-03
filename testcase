@@ -1,0 +1,61 @@
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+public class RequestSubmissionServiceTest {
+
+    @Mock
+    private RequestSubmissionQueryDSLRepository queryDSLRepository;
+
+    @InjectMocks
+    private RequestSubmissionService requestSubmissionService;
+
+    @Test
+    public void testLoadById() {
+        // Mock data
+        Long submissionId = 1L;
+        RequestSubmission mockSubmission = new RequestSubmission();
+        // Set up expectations
+        when(queryDSLRepository.findByReportIdAndUserIdAndStatus(submissionId, anyString(), anyString())).thenReturn(mockSubmission);
+
+        // Call the service method
+        RequestSubmission result = requestSubmissionService.loadById(submissionId);
+
+        // Verify the result
+        assertNotNull(result);
+        // You can add more assertions as per your requirements
+    }
+
+    @Test
+    public void testCreateSubmitWithShareTrue() {
+        // Mock data for creation
+        RequestSubmission extractSubmission = createSampleSubmission();
+        // Mock the repository method call
+        when(queryDSLRepository.save(any(RequestSubmission.class))).thenReturn(extractSubmission);
+
+        // Call the service method
+        Long submissionId = requestSubmissionService.create(extractSubmission);
+
+        // Verify the result
+        assertNotNull(submissionId);
+        assertEquals(1006L, submissionId);
+    }
+
+    // Utility method to create a sample submission
+    private RequestSubmission createSampleSubmission() {
+        // Create a sample submission
+        RequestSubmission extractSubmission = new RequestSubmission();
+        // Set properties as needed for the test
+        extractSubmission.setStatus("SUCCESS");
+        extractSubmission.setGuid("TestCaseJunit");
+        // Set other properties as needed
+        return extractSubmission;
+    }
+}
