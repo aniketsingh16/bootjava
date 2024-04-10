@@ -112,3 +112,30 @@ column_alignments = {'A': 'left', 'B': 'left', 'C': 'left'}
 df.to_excel(excel_file, index=False, sheet_name='Sheet1', engine='openpyxl', columns=column_alignments)
 
 # Now, your data will be written to the Excel file with the specified column alignm
+
+from openpyxl import load_workbook
+from openpyxl.styles import Alignment
+
+# Replace 'pivot_table.xlsx' with the path to your Excel file
+excel_file = 'pivot_table.xlsx'
+
+# Load the workbook
+workbook = load_workbook(excel_file)
+
+# Access the specific sheet by name
+sheet_name = 'Sheet1'
+sheet = workbook[sheet_name]
+
+# Define the alignment style (left-aligned)
+alignment = Alignment(horizontal='left')
+
+# Specify the columns you want to align to the left
+columns_to_align = ['A', 'B', 'C']
+
+# Iterate through the specified columns and set alignment style
+for column in columns_to_align:
+    for cell in sheet[column]:
+        cell.alignment = alignment
+
+# Save the changes to the workbook
+workbook.save(excel_file)
