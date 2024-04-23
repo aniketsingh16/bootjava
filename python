@@ -41,3 +41,56 @@ def highlight_category_c(row):
 
 # Apply the styling function to the DataFrame
 styled_df = styled_df.apply(highlight_category_c, axis=1)
+
+------------------------------------------------
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+
+# Replace 'pivot_table.xlsx' with the path to your Excel file
+excel_file = 'pivot_table.xlsx'
+
+# Load the workbook
+workbook = load_workbook(excel_file)
+
+# Specify the existing sheet you want to copy
+existing_sheet_name = 'Sheet1'
+existing_sheet = workbook[existing_sheet_name]
+
+# Create a new worksheet as a copy of the existing one
+new_sheet_name = 'Aniket'
+new_sheet = workbook.copy_worksheet(existing_sheet)
+new_sheet.title = new_sheet_name
+
+# Save the changes to the workbook
+workbook.save(excel_file)
+
+# Close the workbook when done
+workbook.close()
+----------------------------------------------------
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
+
+# Replace 'pivot_table.xlsx' with the path to your Excel file
+excel_file = 'pivot_table.xlsx'
+
+# Load the workbook
+workbook = load_workbook(excel_file)
+
+# Access the specific sheet by name
+sheet_name = 'Sheet1'
+sheet = workbook[sheet_name]
+
+# Define the fill color for highlighting
+highlight_fill = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')
+
+# Iterate through each row in column D and highlight the entire row if value is 'SapCentre'
+for row in sheet.iter_rows(min_row=2, min_col=4, max_row=sheet.max_row, max_col=4):
+    if row[0].value == 'SapCentre':
+        for cell in row:
+            cell.fill = highlight_fill
+
+# Save the changes to the workbook
+workbook.save(excel_file)
+
+# Close the workbook when done
+workbook.close()
