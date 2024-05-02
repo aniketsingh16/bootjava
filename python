@@ -1,3 +1,6 @@
+# Bold the entire row
+            for col in range(1, ws.max_column + 1):
+                ws.cell(row=cell.row, column=col).font = Font(bold=True)
 import pandas as pd
 import numpy as np
 
